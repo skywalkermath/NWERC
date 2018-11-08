@@ -1,0 +1,92 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+
+/**
+ * Code will not terminate ;-;
+ * attempt for https://open.kattis.com/problems/addingwords
+ */
+
+public class printers {
+	static HashMap<String, Integer> dict;
+	static HashMap<Integer, String> revDict;
+	
+	public static void processMaths(String[] input) {
+		int currentOutput = 0;
+		boolean failed = false;
+		
+		int op = 1;
+		for(int i = 1; i < input.length; i++) {
+			if(input[i].charAt(0) == 43) {
+				op = 1;
+			}
+			else if(input[i].charAt(0) == 45) {
+				op = -1;
+			}
+			else if(input[i].charAt(0) == 61){
+				
+			}
+			else {
+				if(dict.containsKey(input[i])) {
+					currentOutput += op * dict.get(input[i]);
+				}
+				else {
+					failed = true;
+				}
+			}
+			
+			System.out.print(input[i] + " ");
+		}
+		
+		if(failed) {
+			System.out.print("unknown\n");
+		}
+		else if(revDict.containsKey(currentOutput)){
+			System.out.print(revDict.get(currentOutput) + "\n");
+		}else {
+			System.out.print("unknown\n");
+		}
+	}
+	
+	public static void clear() {
+		dict = new HashMap<String, Integer>();
+		revDict = new HashMap<Integer, String>();
+	}
+	
+	public static void def(String word, String x) {
+		int temp;
+		if(dict.containsKey(word)) {
+			temp = dict.get(word);
+			dict.remove(word);
+			revDict.replace(temp, word);
+		}
+		dict.put(word, Integer.parseInt(x));
+		revDict.put(Integer.parseInt(x), word);
+	}
+	
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		
+		dict = new HashMap<String, Integer>();
+		revDict = new HashMap<Integer, String>();
+		
+		while(sc.hasNextLine()) {
+			String[] cur = sc.nextLine().split(" ");
+
+			switch(cur[0]) {
+			case "clear":
+				clear();
+				break;
+			case "calc":
+				processMaths(cur);
+				break;
+			case "def":
+				def(cur[1], cur[2]);
+				break;
+			default:
+				break;
+			}
+		}
+		sc.close();	
+	}
+}
