@@ -1,0 +1,32 @@
+import java.util.Scanner;
+
+/**
+ * Completed  
+ *
+ */
+
+
+public class Printerss {
+
+	
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		
+		if(n == 1) {
+			System.out.println(1);
+			System.exit(0);
+		}
+		
+		int days = 2;
+		
+		int x = 2;
+		
+		while(x < n) {
+			days++;
+			x = x * 2;
+		}
+		
+		System.out.println(days);
+	}
+}
