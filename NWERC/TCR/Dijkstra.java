@@ -3,6 +3,11 @@ import java.util.*;
 public class Dijkstra<T> {
 
     public static void main(String[] args) {
+
+        //Create this graph:
+        //https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#/media/File:Dijkstra_Animation.gif
+        //The value can be anything the problem requires, in this case used Strings
+
         DNode<String> n1 = new DNode<>("1");
         DNode<String> n2 = new DNode<>("2");
         DNode<String> n3 = new DNode<>("3");
@@ -10,6 +15,7 @@ public class Dijkstra<T> {
         DNode<String> n5 = new DNode<>("5");
         DNode<String> n6 = new DNode<>("6");
 
+        //Set up the connections between nodes
         n1.addConnection(n2, 7);
         n1.addConnection(n3, 9);
         n1.addConnection(n6, 14);
@@ -24,15 +30,26 @@ public class Dijkstra<T> {
 
         n5.addConnection(n6, 9);
 
+        //Runs dijkstra on the graph
         Dijkstra<String> calc = new Dijkstra(n1, n1, n2, n3, n4, n5, n6);
+
+        //Prints out the path from the start node (n1) to n5
         System.out.println(calc.getPath(n5));
+
+        //Prints the distance between the start node and n5
         System.out.println(calc.getDistance(n5));
 
+        //Prints the ending node with the shortest distance to n1
         System.out.println(calc.getBestDistance(n2, n3, n4, n5, n6));
     }
 
     private DNode<T> startNode;
 
+    /**
+     * Runs Dijkstra on the nodes specified
+     * @param startNode Starting node to run dijkstra on
+     * @param nodes A list of all nodes in the graph. startNode must be contained in this
+     */
     public Dijkstra(DNode<T> startNode, DNode<T>...nodes) {
         this.startNode = startNode;
 
@@ -66,10 +83,18 @@ public class Dijkstra<T> {
         }
     }
 
+    /**
+     * @param endNode Node to get the distance to
+     * @return The distance between the starting node and the specified ending node
+     */
     public int getDistance(DNode<T> endNode) {
         return endNode.bestDistance;
     }
 
+    /**
+     * @param nodes A list of nodes to check
+     * @return The closest node to the starting node
+     */
     public DNode<T> getBestDistance(DNode<T>...nodes) {
         DNode<T> best = null;
 
@@ -81,6 +106,10 @@ public class Dijkstra<T> {
         return best;
     }
 
+    /**
+     * @param endNode The node to get a path to
+     * @return A path from the starting node to the ending node
+     */
     public List<DNode<T>> getPath(DNode<T> endNode) {
         List<DNode<T>> path = new LinkedList<>();
         path.add(endNode);
@@ -113,6 +142,11 @@ public class Dijkstra<T> {
             return value;
         }
 
+        /**
+         * Adds a connection between this node and the specified node
+         * @param node the node to add a connection to
+         * @param distance The distance between this node and the specified node
+         */
         public void addConnection(DNode<T> node, int distance) {
             connections.add(new DEdge<>(this, node, distance));
             node.connections.add(new DEdge<>(node, this, distance));
