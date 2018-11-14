@@ -10,6 +10,8 @@ public class TernarySearch {
     /**
      * If there is one turning point in the specified interval,
      * this function will find it.
+     * After each iteration, 1/3 of the interval is discarded.
+     * When the interval -> 0 we get a very accurate result for where the turning point is.
      * It currently looks for maximum points, to change this,
      * change the direction of the comparator at line 25
      */
