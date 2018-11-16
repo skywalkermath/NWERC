@@ -43,18 +43,12 @@ public class TernarySearch {
      * required precision for problems would also be neat.
      */
     public static void main(String[] args){
-        double oldStart = -501;
-        double oldEnd = 501;
-
-
         double newStart = -500;
         double newEnd = 500;
 
         double[] limits;
 
-        while(oldStart != newStart || oldEnd != newEnd){
-            oldStart = newStart;
-            oldEnd = newEnd;
+        for (int i = 0; i < 200; i++){
             limits = searchMax(newStart, newEnd);
             newStart = limits[0];
             newEnd = limits[1];
