@@ -1,0 +1,178 @@
+import javax.rmi.ssl.SslRMIClientSocketFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+/**
+ * Dinic's Max Flow:
+ * Traverse graph using BFS
+ * Rank nodes as such:
+ *  Rank of source = 0
+ *  Rank of nodes that source goes to = 1
+ *  Rank of nodes rank one nodes go to = 2
+ *  etc.
+ * Construct path ST rank of each node increases
+ * What's the max flow I can push through this?
+ * Create new Residual graph.
+ */
+
+public class DinicMaxFlow {
+    int[][] adjacencyMatrix; //row[i] -> col[j] => node I -> node J
+    int[][] newAdjacencyMatrix;
+    int[] ranks;
+
+    int sink;
+    int source;
+    int curFlow;
+    int maxRank;
+
+    public DinicMaxFlow(){
+        adjacencyMatrix = new int[6][6];
+        sink = 5;
+        source = 0;
+        ranks = new int[6];
+        curFlow = 0;
+
+        adjacencyMatrix[0][1] = 10;
+        adjacencyMatrix[0][2] = 10;
+
+        adjacencyMatrix[1][3] = 4;
+        adjacencyMatrix[1][2] = 2;
+        adjacencyMatrix[1][4] = 8;
+
+        adjacencyMatrix[2][4] = 9;
+
+        adjacencyMatrix[3][5] = 10;
+
+        adjacencyMatrix[4][5] = 10;
+        adjacencyMatrix[4][3] = 6;
+    }
+
+    void print(){
+        for (int i = 0; i < adjacencyMatrix.length; i++){
+            for (int j = 0; j < adjacencyMatrix[i].length; j++){
+                System.out.print(adjacencyMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    void sendFlow(int[] path){
+        System.out.println();
+        System.out.print("Path ");
+        for(int i = 0; i < path.length; i++){
+            System.out.print(path[i] + " ");
+        }
+        System.out.println();
+
+        int max = Integer.MAX_VALUE;
+
+        for(int i = 0; i < path.length - 1; i++){
+            max = Math.min(max, adjacencyMatrix[path[i]][path[i+1]]);
+        }
+
+        adjacencyMatrix[path[0]][path[1]] -= max;
+        adjacencyMatrix[path[path.length - 1]][path[path.length - 2]] += max;
+
+        for(int i = 1; i < path.length - 1; i++){
+            adjacencyMatrix[path[i]][path[i + 1]] -= max;
+            adjacencyMatrix[path[i]][path[i - 1]] += max;
+        }
+
+        curFlow += max;
+        System.out.println(curFlow);
+        print();
+    }
+
+    /**
+     * Uses depth first search to find paths through
+     * levels and adjusts residual graph
+     */
+    void augment(){
+        Stack<Integer> nodes = new Stack<Integer>();
+        int[] path = new int[maxRank];
+        nodes.push(source);
+        int cur;
+        boolean pathMade = false;
+        boolean[] done = new boolean[adjacencyMatrix[0].length];
+        int level;
+
+        while(!nodes.empty()){
+            cur = nodes.pop();
+            if(done[cur]) continue;
+            done[cur] = true;
+            level = ranks[cur];
+            if(level == maxRank - 1) pathMade = true;
+            path[level] = cur;
+
+            for(int j = 0; j < adjacencyMatrix[cur].length;j++){
+                if(adjacencyMatrix[cur][j] != 0 && ranks[cur] + 1 == ranks[j]){
+                    nodes.push(j);
+                }
+            }
+            if(pathMade){
+                sendFlow(path);
+            }
+        }
+    }
+
+
+    /**
+     * Run BFS and populate ranks as you go.
+     */
+    boolean BFS(){
+        ArrayList<Integer> nodes = new ArrayList<Integer>();
+        boolean[] done = new boolean[adjacencyMatrix[0].length];
+
+        boolean foundSink = false;
+
+        int cur;
+        int rank = 1;
+        int rankBuffer1 = 0;
+        int rankBuffer2 = 0;
+
+        if(source == sink) return true;
+
+        nodes.add(source);
+        ranks[source] = 0;
+        done[source] = true;
+
+        while(!nodes.isEmpty()){
+            cur = nodes.get(0);
+            nodes.remove(0);
+            if(cur == sink) foundSink = true;
+            if(rankBuffer1 > 0) rankBuffer1--;
+
+            for(int j = 0; j < adjacencyMatrix[cur].length; j++){
+                if(adjacencyMatrix[cur][j] == 0) continue;
+                else if(!done[j]){
+                    ranks[j] = rank;
+                    done[j] = true;
+                    nodes.add(j);
+                    rankBuffer2++;
+                }
+            }
+            if(rankBuffer1 == 0){
+                rank++;
+                rankBuffer1 = rankBuffer2;
+                rankBuffer2 = 0;
+            }
+        }
+
+        System.out.print("ranks is: ");
+        for(int i = 0; i < ranks.length; i++){
+            System.out.print(ranks[i] + " ");
+        }
+        System.out.println();
+        maxRank = rank - 1;
+        return foundSink;
+    }
+
+
+
+    public static void main(String[] args){
+        DinicMaxFlow dmx = new DinicMaxFlow();
+        while (dmx.BFS())
+        dmx.augment();
+    }
+}
