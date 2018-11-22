@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class Dijkstra {
@@ -60,5 +61,24 @@ public class Dijkstra {
             return minFinal.finalDistance;
         }
         return -1; //no path
+    }
+
+    ArrayList<Integer> findPath(int start, int end){
+        DNode cur = nodes[end];
+        ArrayList<Integer> path = new ArrayList<>();
+
+        while(true){
+            path.add(0, cur.nodeID);
+            if(cur.nodeID == start){
+                break;
+            }
+            for(int j = 0; j < adjacencyMatrix[cur.nodeID].length; j++){
+                if(nodes[j].finalDistance + adjacencyMatrix[cur.nodeID][j] == cur.finalDistance && j != cur.nodeID){
+                    cur = nodes[j];
+                    break;
+                }
+            }
+        }
+        return path;
     }
 }
