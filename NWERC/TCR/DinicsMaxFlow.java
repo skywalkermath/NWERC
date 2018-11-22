@@ -24,28 +24,11 @@ public class DinicMaxFlow {
     int maxLevel;
 
     /**
-     * Create test graph
+     * Create graph
      */
     public DinicMaxFlow(){
-        adjacencyMatrix = new int[6][6];
-        sink = 5;
-        source = 0;
-        levels = new int[6];
         curFlow = 0;
-
-        adjacencyMatrix[0][1] = 10;
-        adjacencyMatrix[0][2] = 10;
-
-        adjacencyMatrix[1][3] = 4;
-        adjacencyMatrix[1][2] = 2;
-        adjacencyMatrix[1][4] = 8;
-
-        adjacencyMatrix[2][4] = 9;
-
-        adjacencyMatrix[3][5] = 10;
-
-        adjacencyMatrix[4][5] = 10;
-        adjacencyMatrix[4][3] = 6;
+        //TODO: create graph and initialise all fields
     }
 
     /**
