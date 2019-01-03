@@ -9,7 +9,12 @@ public class Clocks {
 
     /**
      * Linear time check for pattern (b) in a string (a)
-     */
+     * To modify 
+     * - change the input
+     * - adjust the if statements for the new input
+     * To return instances of matching pattern
+     * - adjust return statement to return a list of (i - len(b)) when triggered
+     **/
     static boolean kmp(int[] a, int[] b){
         int[] t = new int[n];
         t[0] = 0;
@@ -43,7 +48,7 @@ public class Clocks {
     }
 
     /**
-     * Linear time sorting algorithm
+     * Linear time sorting algorithm (counting sort)
      */
     static void sort(){
         int[] books = new int[360000];
